@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Fetch API Exercise Lab</title>
+</head>
+
+<body>
+
+  <div id="container">
+    <h1>The Fetch API Exercises</h1>
+    <p>Open the web inspector console to test.</p>
+    <button id="load-photo">Load Dog Photo</button>
+  </div>
+</body>
+<script>
+  // Place your code below this line
+  var url = "https://dog.ceo/api/breeds/image/random";
+
+  // fetch(url)
+  //   .then((Response) => Response.json())
+  //   .then(console.log)
+  //   .catch((err) => updateAlert("An error has occured " + err, "alert-danger"))
+
+
+  function updateAlert(text) {
+    alert(text);
+  };
+
+
+  function getRandomDogPhoto() {
+    return fetch(url).then((response) => {
+      return response.json().then((data) => {
+        console.log(data);
+        return data;
+      }).catch((err) => {
+        console.log(err);
+      }).then((data) => renderDogPhoto(data))
+    });
+  };
+
+  console.log(getRandomDogPhoto)
+
+  var btn = document.querySelector("#load-photo");
+
+  btn.addEventListener("click", init);
+
+  async function init() {
+    loadSpinner();
+    var data = getRandomDogPhoto();
+    if (data.length == 0) {
+      updateAlert("The data is empty");
+    } else {
+      updateAlert("We got the data for you!");
+    }
+    console.log(data);
+    removeSpinner();
+    renderDogPhoto(data.message);
+  };
+
+
+  function renderDogPhoto(url) {
+    var image = document.createElement("img");
+    var imageParent = document.getElementById("container");
+    image.id = "id";
+    image.className = "class";
+    image.src = url.message;
+    imageParent.appendChild(image);
+    document.getElementById("load-photo").style.display = "none";
+  };
+
+  function loadSpinner() {
+    document.getElementById("load-photo").disabled = true;
+
+    const spinner = `../assets/loader.svg`;
+    const img = `<img src="${spinner}" id="spinner" alt="Loading spinner image" />`;
+    document.querySelector(`#container`).insertAdjacentHTML(`beforeend`, img);
+    btn.insertAdjacentHTML(
+      `afterbegin`, img);
+  };
+
+  function removeSpinner() {
+    const spinner = document.querySelector(`img#spinner`);
+    spinner.parentElement.removeChild(spinner);
+  }
+
+</script>
+
+</html>
